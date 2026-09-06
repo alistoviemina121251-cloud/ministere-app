@@ -1,0 +1,97 @@
+﻿<div class="marche-list-container">
+  <div class="header-actions">
+    <h2>📋 Gestion des Marchés</h2>
+    <div>
+      <button class="btn btn-refresh" (click)="refresh()" title="Rafraîchir">🔄</button>
+      <button class="btn btn-primary" (click)="navigateToCreate()">➕ Nouveau Marché</button>
+    </div>
+  </div>
+
+  <app-recherche-marche (search)="rechercher($event)"></app-recherche-marche>
+
+  <div class="table-container">
+    <div *ngIf="isLoading" class="loading-spinner">⏳ Chargement...</div>
+
+    <table class="table" *ngIf="!isLoading && marches.length > 0; else noData">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Référence</th>
+          <th>Objet</th>
+          <th>Direction</th>
+          <th>Statut</th>
+          <th>Montant</th>
+          <th>Région</th>
+          <th>Date</th>
+          <th>Fichiers</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let marche of marches; let i = index">
+          <td>{{ i + 1 }}</td>
+          <td><strong>{{ marche.reference }}</strong></td>
+          <td>{{ marche.objet }}</td>
+          <td>{{ marche.direction }}</td>
+          <td>
+            <span class="badge" 
+                  [class.badge-success]="marche.statut === 'ACTIF'"
+                  [class.badge-warning]="marche.statut === 'EN_ATTENTE'"
+                  [class.badge-secondary]="marche.statut === 'ARCHIVE'"
+                  [class.badge-danger]="marche.statut === 'ANNULE'">
+              {{ marche.statut }}
+            </span>
+          </td>
+          <td>{{ marche.montant | number:'1.0-0' }} FCFA</td>
+          <td>{{ marche.region || '-' }}</td>
+          <td>{{ marche.dateCreation | date:'dd/MM/yyyy' }}</td>
+          <td>
+            <button class="btn btn-sm btn-secondary" (click)="openFilesModal(marche.id!)" title="Voir fichiers">
+              📎 <span class="badge-file-count">{{ getFileCount(marche.id!) }}</span>
+            </button>
+          </td>
+          <td>
+            <button class="btn btn-sm btn-info" (click)="voirDetails(marche.id!)" title="Voir détails">👁️</button>
+            <button class="btn btn-sm btn-warning" (click)="editMarche(marche.id!)" title="Modifier">✏️</button>
+            <button class="btn btn-sm btn-danger" (click)="deleteMarche(marche.id!)" title="Supprimer">🗑️</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <ng-template #noData>
+      <div class="empty-state">
+        <p>📭 Aucun marché enregistré</p>
+        <button class="btn btn-primary" (click)="navigateToCreate()">Créer votre premier marché</button>
+      </div>
+    </ng-template>
+  </div>
+</div>
+
+<!-- ===== MODALE PIÈCES JOINTES ===== -->
+<div class="modal-overlay" *ngIf="showFilesModal" (click.self)="closeFilesModal()">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>📎 Pièces jointes</h3>
+      <button class="close-btn" (click)="closeFilesModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div *ngIf="filesLoading" class="loading-spinner">⏳ Chargement...</div>
+      <div *ngIf="!filesLoading && selectedFiles.length === 0" class="empty-files">
+        <p>📭 Aucun fichier joint</p>
+      </div>
+      <ul *ngIf="!filesLoading && selectedFiles.length > 0">
+        <li *ngFor="let file of selectedFiles; let j = index">
+          <span class="file-icon">{{ getFileIcon(file.type) }}</span>
+          <span class="file-name">{{ file.nom }}</span>
+          <span class="file-size">{{ file.taille | fileSize }}</span>
+          <span class="file-date">{{ file.dateUpload | date:'dd/MM/yyyy HH:mm' }}</span>
+          <div class="file-actions">
+            <button class="btn-download" (click)="downloadFile(selectedMarcheId!, file.id!, file.nom)" title="Télécharger">⬇️</button>
+            <button class="btn-view" (click)="viewFile(file.chemin)" title="Visualiser">👁️</button>
+            <button class="btn-delete" (click)="deleteFile(selectedMarcheId!, file.id!, j)" title="Supprimer">🗑️</button>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>

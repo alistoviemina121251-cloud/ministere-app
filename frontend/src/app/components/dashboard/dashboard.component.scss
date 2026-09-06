@@ -1,0 +1,17 @@
+﻿.dashboard { background: white; border-radius: 12px; padding: 2rem; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+.dashboard h2 { color: #1e3c72; margin-bottom: 2rem; }
+.stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
+.stat-card { background: #f8f9fa; border-radius: 8px; padding: 1.5rem; text-align: center; border-left: 4px solid #667eea; }
+.stat-number { font-size: 2.5rem; font-weight: bold; color: #1e3c72; }
+.stat-label { color: #6c757d; font-size: 0.9rem; margin-top: 0.3rem; }
+.recent-marches { margin-top: 1.5rem; }
+.recent-marches h3 { color: #1e3c72; margin-bottom: 1rem; }
+.recent-marches ul { list-style: none; padding: 0; }
+.recent-marches li { padding: 0.8rem; border-bottom: 1px solid #e9ecef; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; }
+.recent-marches li:last-child { border-bottom: none; }
+.ref { font-weight: 600; color: #1e3c72; }
+.title { flex: 1; margin: 0 1rem; }
+.badge { padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600; }
+.badge-success { background: #d4edda; color: #155724; }
+.badge-warning { background: #fff3cd; color: #856404; }
+.badge-secondary { background: #e2e3e5; color: #383d41; }

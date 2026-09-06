@@ -1,0 +1,171 @@
+﻿.marche-list-container {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.header-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.header-actions h2 { color: #1e3c72; margin: 0; }
+.header-actions div { display: flex; gap: 10px; align-items: center; }
+
+.btn {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(102,126,234,0.4); }
+
+.btn-refresh {
+  background: #e5e7eb;
+  color: #1a2332;
+  font-size: 1.2rem;
+  padding: 0.6rem 0.8rem;
+}
+.btn-refresh:hover { background: #d1d5db; transform: rotate(180deg); }
+
+.btn-sm { padding: 0.4rem 0.8rem; font-size: 0.85rem; margin: 0 0.2rem; }
+.btn-info { background: #17a2b8; color: white; }
+.btn-info:hover { background: #138496; }
+.btn-warning { background: #ffc107; color: #212529; }
+.btn-warning:hover { background: #e0a800; }
+.btn-danger { background: #dc3545; color: white; }
+.btn-danger:hover { background: #c82333; }
+.btn-secondary { background: #6c757d; color: white; }
+.btn-secondary:hover { background: #5a6268; }
+
+.badge-file-count {
+  background: #e0e7ff;
+  color: #4338ca;
+  border-radius: 50%;
+  padding: 1px 6px;
+  font-size: 10px;
+  margin-left: 2px;
+}
+
+.table-container { overflow-x: auto; }
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+.table thead { background: #f8f9fa; }
+.table th { padding: 1rem; text-align: left; border-bottom: 2px solid #dee2e6; font-weight: 600; color: #495057; }
+.table td { padding: 1rem; border-bottom: 1px solid #e9ecef; }
+.table tbody tr:hover { background: #f8f9fa; }
+
+.badge {
+  padding: 0.3rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+.badge-success { background: #d4edda; color: #155724; }
+.badge-warning { background: #fff3cd; color: #856404; }
+.badge-secondary { background: #e2e3e5; color: #383d41; }
+.badge-danger { background: #f8d7da; color: #721c24; }
+
+.empty-state { text-align: center; padding: 3rem; color: #6c757d; }
+.empty-state p { font-size: 1.1rem; margin-bottom: 1.5rem; }
+.loading-spinner { text-align: center; padding: 2rem; font-size: 1.2rem; color: #6c757d; }
+
+/* ===== MODALE ===== */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  max-width: 700px;
+  width: 90%;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid #e9ecef;
+  padding-bottom: 0.75rem;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #6c757d;
+}
+.close-btn:hover { color: #dc3545; }
+
+.modal-body ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.modal-body li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid #e9ecef;
+  flex-wrap: wrap;
+}
+
+.file-icon { font-size: 24px; }
+.file-name { flex: 1; font-weight: 500; min-width: 100px; }
+.file-size, .file-date { font-size: 0.85rem; color: #6c757d; }
+
+.file-actions {
+  display: flex;
+  gap: 4px;
+}
+
+.btn-download, .btn-view, .btn-delete {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 16px;
+  transition: all 0.3s;
+}
+.btn-download:hover { background: #dbeafe; }
+.btn-view:hover { background: #d1fae5; }
+.btn-delete:hover { background: #fee2e2; }
+
+.empty-files {
+  text-align: center;
+  padding: 2rem;
+  color: #6c757d;
+}

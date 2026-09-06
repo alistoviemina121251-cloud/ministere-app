@@ -1,0 +1,10 @@
+com\ministre\archive\model\TypeMarche.class
+com\ministre\archive\ArchiveMinistereApplication.class
+com\ministre\archive\model\PieceJointe.class
+com\ministre\archive\service\impl\MarcheServiceImpl.class
+com\ministre\archive\controller\MarcheController.class
+com\ministre\archive\model\Marche.class
+com\ministre\archive\repository\MarcheRepository.class
+com\ministre\archive\model\StatutArchive.class
+com\ministre\archive\repository\PieceJointeRepository.class
+com\ministre\archive\service\MarcheService.class

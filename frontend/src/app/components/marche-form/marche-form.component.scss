@@ -1,0 +1,384 @@
+﻿.marche-form-container {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.form-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.form-header h2 {
+  color: #1e3c72;
+  margin: 0;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.full-width {
+  grid-column: 1 / -1;
+}
+
+.form-group {
+  margin-bottom: 0.5rem;
+}
+
+.form-group label {
+  display: block;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 0.3rem;
+}
+
+.form-control {
+  width: 100%;
+  padding: 0.75rem;
+  border: 2px solid #e1e5eb;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: border-color 0.3s;
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: #667eea;
+}
+
+textarea.form-control {
+  resize: vertical;
+  min-height: 80px;
+}
+
+select.form-control:disabled {
+  background: #e9ecef;
+  cursor: not-allowed;
+}
+
+/* ===== DÉCOMPTES ===== */
+.decompte-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+
+.decompte-label {
+  font-weight: 500;
+  color: #4b5563;
+}
+
+.btn-add-decompte {
+  padding: 6px 12px;
+  background: #10b981;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+.btn-add-decompte:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.decompte-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 8px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.decompte-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  background: #f8fafc;
+  border-radius: 8px;
+  border-left: 4px solid #10b981;
+  flex-wrap: wrap;
+}
+
+.decompte-numero {
+  font-weight: 600;
+  color: #1a2332;
+  min-width: 60px;
+}
+
+.decompte-fields {
+  display: flex;
+  gap: 10px;
+  flex: 1;
+  flex-wrap: wrap;
+}
+
+.decompte-input {
+  padding: 6px 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  flex: 1;
+  min-width: 120px;
+}
+
+.decompte-input:focus {
+  outline: none;
+  border-color: #667eea;
+}
+
+.btn-remove-decompte {
+  background: #fee2e2;
+  border: none;
+  border-radius: 4px;
+  color: #dc2626;
+  cursor: pointer;
+  padding: 2px 8px;
+  font-size: 14px;
+}
+
+.btn-remove-decompte:hover {
+  background: #fecaca;
+}
+
+/* ===== RÉCEPTION ===== */
+.reception-group {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.reception-group select {
+  flex: 1;
+  min-width: 150px;
+}
+
+.reception-group input {
+  flex: 1;
+  min-width: 150px;
+}
+
+/* ===== PIÈCES JOINTES ===== */
+.storage-info {
+  margin-bottom: 12px;
+  padding: 10px;
+  background: #f8fafc;
+  border-radius: 8px;
+}
+
+.storage-info span {
+  font-size: 0.9rem;
+  color: #4b5563;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 8px;
+  background: #e5e7eb;
+  border-radius: 4px;
+  margin-top: 6px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #10b981, #059669);
+  border-radius: 4px;
+  transition: width 0.5s ease;
+}
+
+.file-drop-zone {
+  border: 2px dashed #d1d5db;
+  border-radius: 12px;
+  padding: 30px 20px;
+  text-align: center;
+  transition: all 0.3s;
+  background: #fafbfc;
+  cursor: pointer;
+}
+
+.file-drop-zone.dragover {
+  border-color: #667eea;
+  background: #eef2ff;
+  transform: scale(1.01);
+}
+
+.file-drop-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.file-icon {
+  font-size: 40px;
+}
+
+.btn-browse {
+  background: #f3f4f6;
+  border: 1px solid #d1d5db;
+  padding: 6px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-top: 4px;
+}
+
+.file-formats {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 8px;
+}
+
+.format-tag {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: #e0e7ff;
+  color: #4338ca;
+}
+
+.file-list {
+  margin-top: 12px;
+}
+
+.file-list h4 {
+  font-size: 0.9rem;
+  color: #1a2332;
+  margin-bottom: 8px;
+}
+
+.file-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  background: #f8fafc;
+  border-radius: 6px;
+  border-left: 3px solid #667eea;
+  margin-bottom: 6px;
+  flex-wrap: wrap;
+}
+
+.file-item.uploaded-item {
+  border-left-color: #10b981;
+}
+
+.file-name {
+  font-weight: 500;
+  font-size: 14px;
+  flex: 1;
+  min-width: 100px;
+}
+
+.file-size {
+  font-size: 12px;
+  color: #6b7a8f;
+}
+
+.file-date {
+  font-size: 12px;
+  color: #6b7a8f;
+}
+
+.file-icon-small {
+  font-size: 20px;
+}
+
+.btn-remove-file {
+  background: #fee2e2;
+  border: none;
+  border-radius: 4px;
+  color: #dc2626;
+  cursor: pointer;
+  padding: 2px 8px;
+  font-size: 14px;
+}
+
+.btn-remove-file:hover {
+  background: #fecaca;
+}
+
+.file-actions {
+  display: flex;
+  gap: 4px;
+}
+
+.btn-download, .btn-view, .btn-delete {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 16px;
+  transition: all 0.3s;
+}
+
+.btn-download:hover {
+  background: #dbeafe;
+}
+
+.btn-view:hover {
+  background: #d1fae5;
+}
+
+.btn-delete:hover {
+  background: #fee2e2;
+}
+
+/* ===== FORM ACTIONS ===== */
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 2px solid #e9ecef;
+}
+
+.btn {
+  padding: 0.6rem 1.5rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.btn-primary:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102,126,234,0.4);
+}
+
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-secondary {
+  background: #6c757d;
+  color: white;
+}
+
+.btn-secondary:hover {
+  background: #5a6268;
+}

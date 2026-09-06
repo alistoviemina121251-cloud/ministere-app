@@ -1,0 +1,68 @@
+﻿<div class="login-page">
+  <div class="login-container">
+    <div class="login-card">
+      <div class="login-header">
+        <h2>🔐 Ministère App</h2>
+        <p>{{ showForgotPassword ? 'Réinitialisation du mot de passe' : 'Connexion sécurisée' }}</p>
+      </div>
+
+      <form *ngIf="!showForgotPassword" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <div class="form-group">
+          <label>📧 Email</label>
+          <input type="email" formControlName="email" placeholder="email@exemple.com" class="form-control">
+        </div>
+        <div class="form-group">
+          <label>🔒 Mot de passe</label>
+          <input type="password" formControlName="password" placeholder="Votre mot de passe" class="form-control">
+        </div>
+
+        <div class="form-options">
+          <a (click)="openForgotPassword()" class="forgot-link">Mot de passe oublié ?</a>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block" [disabled]="loginForm.invalid || isLoading">
+          {{ isLoading ? '⏳ Connexion...' : 'Se connecter' }}
+        </button>
+
+        <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+
+        <p class="register-link">
+          Pas encore de compte ? <span class="btn-link" (click)="goToRegister()">S'inscrire</span>
+        </p>
+      </form>
+
+      <div *ngIf="showForgotPassword">
+        <div *ngIf="resetStep === 'request'">
+          <p>Saisissez votre email pour recevoir un lien de réinitialisation.</p>
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" [(ngModel)]="forgotEmail" placeholder="email@exemple.com" class="form-control">
+          </div>
+          <button class="btn btn-primary" (click)="onForgotSubmit()" [disabled]="isLoading">
+            {{ isLoading ? '⏳ Envoi...' : 'Envoyer le lien' }}
+          </button>
+          <button class="btn btn-secondary" (click)="closeForgotPassword()">Annuler</button>
+        </div>
+
+        <div *ngIf="resetStep === 'reset'">
+          <p>Un token a été généré. Saisissez-le avec votre nouveau mot de passe.</p>
+          <div class="form-group">
+            <label>Token</label>
+            <input type="text" [(ngModel)]="resetToken" placeholder="Token reçu" class="form-control">
+          </div>
+          <div class="form-group">
+            <label>Nouveau mot de passe (6 caractères min)</label>
+            <input type="password" [(ngModel)]="newPassword" placeholder="Nouveau mot de passe" class="form-control">
+          </div>
+          <button class="btn btn-primary" (click)="onResetSubmit()" [disabled]="isLoading">
+            {{ isLoading ? '⏳ Réinitialisation...' : 'Réinitialiser' }}
+          </button>
+          <button class="btn btn-secondary" (click)="closeForgotPassword()">Annuler</button>
+        </div>
+
+        <div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
+        <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+      </div>
+    </div>
+  </div>
+</div>

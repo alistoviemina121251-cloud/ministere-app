@@ -1,0 +1,19 @@
+﻿<div class="dashboard">
+  <h2>📊 Tableau de bord</h2>
+  <div class="stats-grid">
+    <div class="stat-card"><div class="stat-number">{{ totalMarches }}</div><div class="stat-label">📦 Total</div></div>
+    <div class="stat-card" style="border-left-color:#28a745;"><div class="stat-number">{{ actifCount }}</div><div class="stat-label">✅ Actifs</div></div>
+    <div class="stat-card" style="border-left-color:#ffc107;"><div class="stat-number">{{ enAttenteCount }}</div><div class="stat-label">⏳ En attente</div></div>
+    <div class="stat-card" style="border-left-color:#6c757d;"><div class="stat-number">{{ archiveCount }}</div><div class="stat-label">📁 Archivés</div></div>
+  </div>
+  <div class="recent-marches" *ngIf="recentMarches.length > 0">
+    <h3>📋 Derniers marchés</h3>
+    <ul>
+      <li *ngFor="let marche of recentMarches">
+        <span class="ref">{{ marche.reference }}</span>
+        <span class="title">{{ marche.objet }}</span>
+        <span class="badge" [class.badge-success]="marche.statut === 'ACTIF'" [class.badge-warning]="marche.statut === 'EN_ATTENTE'" [class.badge-secondary]="marche.statut === 'ARCHIVE'">{{ marche.statut }}</span>
+      </li>
+    </ul>
+  </div>
+</div>

@@ -1,0 +1,113 @@
+﻿<div class="recherche-container">
+  <div class="recherche-header">
+    <h3>🔍 Recherche avancée</h3>
+    <button class="btn-toggle" (click)="filtersVisible = !filtersVisible">
+      {{ filtersVisible ? 'Masquer les filtres ▲' : 'Afficher les filtres ▼' }}
+    </button>
+  </div>
+
+  <div class="search-bar">
+    <div class="search-input-wrapper">
+      <span class="search-icon">🔍</span>
+      <input 
+        type="text" 
+        formControlName="motCle"
+        (input)="onSearch()"
+        placeholder="Rechercher par référence, objet, titulaire, direction, région..."
+        class="search-input"
+      >
+      <button class="btn-clear" *ngIf="searchForm.get('motCle')?.value" (click)="clearSearch()">✕</button>
+    </div>
+    <button class="btn-search" (click)="onSearch()">Rechercher</button>
+  </div>
+
+  <div class="filters-panel" *ngIf="filtersVisible">
+    <div class="filters-grid">
+
+      <div class="filter-group">
+        <label>📌 Référence</label>
+        <input type="text" formControlName="reference" (input)="onSearch()" placeholder="M-2024-001" class="filter-input">
+      </div>
+
+      <div class="filter-group">
+        <label>🏢 Direction</label>
+        <input type="text" formControlName="direction" (input)="onSearch()" placeholder="DSI, DAG, DAO..." class="filter-input">
+      </div>
+
+      <div class="filter-group">
+        <label>🏢 Titulaire</label>
+        <input type="text" formControlName="titulaire" (input)="onSearch()" placeholder="Nom de l'entreprise" class="filter-input">
+      </div>
+
+      <div class="filter-group">
+        <label>📊 Statut</label>
+        <select formControlName="statut" (change)="onSearch()" class="filter-select">
+          <option value="">Tous les statuts</option>
+          <option *ngFor="let opt of statutOptions" [value]="opt.value">{{ opt.label }}</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label>📂 Type</label>
+        <select formControlName="type" (change)="onSearch()" class="filter-select">
+          <option value="">Tous les types</option>
+          <option *ngFor="let opt of typeOptions" [value]="opt.value">{{ opt.label }}</option>
+        </select>
+      </div>
+
+      <!-- ===== RÉGION (avec (change) pour forcer la mise à jour) ===== -->
+      <div class="filter-group">
+        <label>🗺️ Région</label>
+        <select formControlName="region" (change)="onRegionSelect($event); onSearch()" class="filter-select">
+          <option value="">Toutes les régions</option>
+          <option *ngFor="let r of regions" [value]="r.code">{{ r.nom }}</option>
+        </select>
+      </div>
+
+      <!-- ===== DÉPARTEMENT ===== -->
+      <div class="filter-group">
+        <label>📍 Département</label>
+        <select formControlName="departement" (change)="onDepartementSelect($event); onSearch()" class="filter-select" [disabled]="!departements.length">
+          <option value="">Tous les départements</option>
+          <option *ngFor="let d of departements" [value]="d.code">{{ d.nom }}</option>
+        </select>
+      </div>
+
+      <!-- ===== COMMUNE ===== -->
+      <div class="filter-group">
+        <label>🏘️ Commune</label>
+        <select formControlName="commune" (change)="onSearch()" class="filter-select" [disabled]="!communes.length">
+          <option value="">Toutes les communes</option>
+          <option *ngFor="let c of communes" [value]="c.code">{{ c.nom }}</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label>📅 Date début</label>
+        <input type="date" formControlName="dateDebut" (change)="onSearch()" class="filter-input">
+      </div>
+
+      <div class="filter-group">
+        <label>📅 Date fin</label>
+        <input type="date" formControlName="dateFin" (change)="onSearch()" class="filter-input">
+      </div>
+
+      <div class="filter-group">
+        <label>💰 Montant min (FCFA)</label>
+        <input type="number" formControlName="montantMin" (input)="onSearch()" placeholder="0" class="filter-input">
+      </div>
+
+      <div class="filter-group">
+        <label>💰 Montant max (FCFA)</label>
+        <input type="number" formControlName="montantMax" (input)="onSearch()" placeholder="100000000" class="filter-input">
+      </div>
+    </div>
+
+    <div class="filters-actions">
+      <button class="btn-reset" (click)="resetFilters()">🔄 Réinitialiser</button>
+      <span class="results-info" *ngIf="totalResults !== null">
+        {{ totalResults }} résultat(s) trouvé(s) - {{ tempsRecherche }} ms
+      </span>
+    </div>
+  </div>
+</div>

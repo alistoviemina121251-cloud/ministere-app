@@ -1,0 +1,182 @@
+﻿<div class="marche-form-container">
+  <div class="form-header">
+    <h2>{{ isEditMode ? '✏️ Éditer le Marché' : '📝 Nouveau Marché' }}</h2>
+    <button class="btn btn-secondary" (click)="goBack()">← Retour</button>
+  </div>
+
+  <form [formGroup]="marcheForm" (ngSubmit)="onSubmit()">
+    <div class="form-grid">
+
+      <!-- ===== INFOS GÉNÉRALES ===== -->
+      <div class="form-group">
+        <label>📌 Référence *</label>
+        <input type="text" formControlName="reference" placeholder="Ex: M-2024-001" class="form-control">
+      </div>
+      <div class="form-group">
+        <label>📝 Objet du Marché *</label>
+        <input type="text" formControlName="objet" placeholder="Titre du marché" class="form-control">
+      </div>
+      <div class="form-group">
+        <label>📂 Type *</label>
+        <select formControlName="type" class="form-control">
+          <option value="">Sélectionnez un type</option>
+          <option *ngFor="let opt of typeOptions" [value]="opt.value">{{ opt.label }}</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>🏢 Direction *</label>
+        <input type="text" formControlName="direction" placeholder="Ex: DSI, DAG, DAO..." class="form-control">
+      </div>
+      <div class="form-group">
+        <label>📊 Statut</label>
+        <select formControlName="statut" class="form-control">
+          <option *ngFor="let opt of statutOptions" [value]="opt.value">{{ opt.label }}</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>💰 Montant (FCFA) *</label>
+        <input type="number" formControlName="montant" placeholder="0" class="form-control">
+      </div>
+      <div class="form-group full-width">
+        <label>📄 Description</label>
+        <textarea formControlName="description" rows="3" placeholder="Description du marché..." class="form-control"></textarea>
+      </div>
+
+      <!-- ===== LOCALISATION ===== -->
+      <div class="form-group">
+        <label>🗺️ Région</label>
+        <select formControlName="region" (change)="onRegionSelect($event)" class="form-control">
+          <option value="">Sélectionnez une région</option>
+          <option *ngFor="let r of regions" [value]="r.code">{{ r.nom }}</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>📍 Département</label>
+        <select formControlName="departement" (change)="onDepartementSelect($event)" class="form-control" [disabled]="!departements.length">
+          <option value="">Sélectionnez un département</option>
+          <option *ngFor="let d of departements" [value]="d.code">{{ d.nom }}</option>
+        </select>
+      </div>
+      <div class="form-group full-width">
+        <label>🏘️ Commune</label>
+        <select formControlName="commune" class="form-control" [disabled]="!communes.length">
+          <option value="">Sélectionnez une commune</option>
+          <option *ngFor="let c of communes" [value]="c.code">{{ c.nom }}</option>
+        </select>
+      </div>
+
+      <!-- ===== DÉCOMPTES ===== -->
+      <div class="form-group full-width" style="border-top: 2px dashed #e5e7eb; padding-top: 15px; margin-top: 10px;">
+        <label style="font-size: 1rem; font-weight: 600; color: #1e3c72;">📊 Décomptes (1 à 20)</label>
+        
+        <div class="decompte-header">
+          <span class="decompte-label">Nombre de décomptes : {{ decomptes.length }}/20</span>
+          <button type="button" class="btn-add-decompte" (click)="ajouterDecompte()" [disabled]="decomptes.length >= 20">
+            ➕ Ajouter un décompte
+          </button>
+        </div>
+
+        <div class="decompte-list" *ngIf="decomptes.length > 0">
+          <div class="decompte-item" *ngFor="let d of decomptes; let i = index">
+            <span class="decompte-numero">N°{{ d.numero }}</span>
+            <div class="decompte-fields">
+              <input type="number" [(ngModel)]="d.montant" [ngModelOptions]="{standalone: true}" placeholder="Montant FCFA" class="decompte-input">
+              <input type="date" [(ngModel)]="d.date" [ngModelOptions]="{standalone: true}" class="decompte-input">
+            </div>
+            <button type="button" class="btn-remove-decompte" (click)="supprimerDecompte(i)">✕</button>
+          </div>
+        </div>
+        <div *ngIf="decomptes.length === 0" style="color: #6b7a8f; font-style: italic; padding: 10px 0;">
+          Aucun décompte ajouté.
+        </div>
+      </div>
+
+      <!-- ===== RÉCEPTION ===== -->
+      <div class="form-group full-width" style="border-top: 2px dashed #e5e7eb; padding-top: 15px; margin-top: 10px;">
+        <label style="font-size: 1rem; font-weight: 600; color: #1e3c72;">📦 Réception</label>
+        <div class="reception-group">
+          <select [(ngModel)]="typeReception" (change)="onTypeReceptionChange()" [ngModelOptions]="{standalone: true}" class="form-control">
+            <option value="AUCUNE">Aucune</option>
+            <option value="PROVISOIRE">Provisoire</option>
+            <option value="DEFINITIVE">Définitive</option>
+          </select>
+          <input type="date" [(ngModel)]="dateReception" [ngModelOptions]="{standalone: true}" class="form-control" [disabled]="typeReception === 'AUCUNE'">
+        </div>
+      </div>
+
+      <!-- ===== PIÈCES JOINTES ===== -->
+      <div class="form-group full-width" style="border-top: 2px dashed #e5e7eb; padding-top: 15px; margin-top: 10px;">
+        <label style="font-size: 1rem; font-weight: 600; color: #1e3c72;">📎 Pièces jointes</label>
+        
+        <!-- Espace de stockage -->
+        <div class="storage-info">
+          <span>💾 Espace utilisé : {{ getEspaceUtilise() }} Go / {{ getEspaceTotal() }} Go</span>
+          <div class="progress-bar">
+            <div class="progress-fill" [style.width.%]="getPourcentageEspace()"></div>
+          </div>
+        </div>
+
+        <!-- Zone de drop -->
+        <div class="file-drop-zone" 
+             (dragover)="onDragOver($event)" 
+             (dragleave)="onDragLeave($event)" 
+             (drop)="onDropFile($event)"
+             [class.dragover]="isDragging">
+          <div class="file-drop-content">
+            <span class="file-icon">📂</span>
+            <p>Glissez vos fichiers ici ou</p>
+            <button type="button" class="btn-browse" (click)="fileInput.click()">Parcourir</button>
+            <input #fileInput type="file" multiple (change)="onFileSelected($event)" style="display: none">
+            <div class="file-formats">
+              <span class="format-tag">PDF</span>
+              <span class="format-tag">DOC</span>
+              <span class="format-tag">DOCX</span>
+              <span class="format-tag">XLS</span>
+              <span class="format-tag">XLSX</span>
+              <span class="format-tag">PPT</span>
+              <span class="format-tag">JPG</span>
+              <span class="format-tag">PNG</span>
+              <span class="format-tag">ZIP</span>
+              <span class="format-tag">MP4</span>
+              <span class="format-tag">MP3</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Fichiers sélectionnés (à uploader) -->
+        <div class="file-list" *ngIf="fichiersSelectionnes.length > 0">
+          <div class="file-item" *ngFor="let file of fichiersSelectionnes; let i = index">
+            <span class="file-name">{{ file.name }}</span>
+            <span class="file-size">{{ file.size | fileSize }}</span>
+            <button type="button" class="btn-remove-file" (click)="removeFileSelection(i)">✕</button>
+          </div>
+        </div>
+
+        <!-- Fichiers déjà uploadés -->
+        <div class="file-list uploaded" *ngIf="fichiers.length > 0">
+          <h4>📁 Fichiers téléchargés</h4>
+          <div class="file-item uploaded-item" *ngFor="let f of fichiers; let i = index">
+            <span class="file-icon-small">{{ getIcone(f.type) }}</span>
+            <span class="file-name">{{ f.nom }}</span>
+            <span class="file-size">{{ f.taille | fileSize }}</span>
+            <span class="file-date">{{ f.dateUpload | date:'dd/MM/yyyy HH:mm' }}</span>
+            <div class="file-actions">
+              <button class="btn-download" (click)="telechargerFichier(marcheId!, f.id!, f.nom)" title="Télécharger">⬇️</button>
+              <button class="btn-view" (click)="visualiserFichier(f.chemin)" title="Visualiser">👁️</button>
+              <button class="btn-delete" (click)="supprimerFichier(marcheId!, f.id!, i)" title="Supprimer">🗑️</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="form-actions">
+      <button type="button" class="btn btn-secondary" (click)="goBack()">Annuler</button>
+      <button type="submit" class="btn btn-primary" [disabled]="marcheForm.invalid || isLoading">
+        <span *ngIf="!isLoading">{{ isEditMode ? 'Mettre à jour' : 'Créer' }}</span>
+        <span *ngIf="isLoading">⏳ En cours...</span>
+      </button>
+    </div>
+  </form>
+</div>

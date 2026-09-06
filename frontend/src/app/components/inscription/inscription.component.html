@@ -1,0 +1,69 @@
+﻿<div class="inscription-container">
+  <div class="inscription-card">
+    <h2>📝 Inscription</h2>
+    <p>{{ step === 'form' ? 'Créer un compte' : 'Confirmation du code' }}</p>
+
+    <form *ngIf="step === 'form'" [formGroup]="inscriptionForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label>Nom *</label>
+        <input type="text" formControlName="nom" class="form-control" placeholder="Votre nom">
+      </div>
+      <div class="form-group">
+        <label>Prénom *</label>
+        <input type="text" formControlName="prenom" class="form-control" placeholder="Votre prénom">
+      </div>
+      <div class="form-group">
+        <label>Nom d\'utilisateur *</label>
+        <input type="text" formControlName="nomUtilisateur" class="form-control" placeholder="Nom unique">
+      </div>
+      <div class="form-group">
+        <label>Email *</label>
+        <input type="email" formControlName="email" class="form-control" placeholder="email@exemple.com">
+      </div>
+      <div class="form-group">
+        <label>Mot de passe * (6 caractères min)</label>
+        <input type="password" formControlName="password" class="form-control" placeholder="Minimum 6 caractères">
+      </div>
+      <div class="form-group">
+        <label>Confirmer le mot de passe *</label>
+        <input type="password" formControlName="confirmPassword" class="form-control" placeholder="Répétez le mot de passe">
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-block" [disabled]="inscriptionForm.invalid || isLoading">
+        {{ isLoading ? '⏳ En cours...' : "S'inscrire" }}
+      </button>
+
+      <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+      <div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
+
+      <p class="login-link">
+        Déjà un compte ? <span class="btn-link" (click)="goToLogin()">Se connecter</span>
+      </p>
+    </form>
+
+    <div *ngIf="step === 'confirmation'">
+      <div class="alert alert-info">
+        Un code de confirmation a été envoyé à <strong>{{ email }}</strong>.<br>
+        <small>Vérifie la console du backend pour le code.</small>
+      </div>
+
+      <div class="form-group">
+        <label>Code de confirmation (6 chiffres)</label>
+        <input type="text" #codeInput class="form-control" placeholder="Ex: 123456" maxlength="6" autofocus>
+      </div>
+
+      <button class="btn btn-primary" (click)="confirmer(codeInput.value)" [disabled]="isLoading">
+        {{ isLoading ? '⏳ Vérification...' : 'Confirmer' }}
+      </button>
+      <button class="btn btn-secondary" (click)="renvoyerCode()" [disabled]="isLoading">
+        Renvoyer le code
+      </button>
+      <button class="btn btn-outline-secondary" (click)="goBackToForm()" [disabled]="isLoading">
+        ⬅ Modifier
+      </button>
+
+      <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+      <div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
+    </div>
+  </div>
+</div>
