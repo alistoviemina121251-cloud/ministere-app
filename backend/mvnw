@@ -91,7 +91,7 @@ else
 fi
 
 if [ -z "$MAVEN_OPTS" ] ; then
-  MAVEN_OPTS="-Xmx1024m -XX:MaxPermSize=512m"
+  MAVEN_OPTS="-Xmx1024m"
 fi
 
 if $cygwin ; then
