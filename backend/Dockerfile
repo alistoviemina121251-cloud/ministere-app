@@ -3,15 +3,17 @@ FROM eclipse-temurin:17-jdk
 WORKDIR /app
 
 COPY pom.xml .
-
 COPY src ./src
+COPY mvnw .
+COPY .mvn ./.mvn
 
-RUN apt-get update \
-    && apt-get install -y maven \
-    && rm -rf /var/lib/apt/lists/*
+# Donner les droits d'ex?cution ? mvnw
+RUN chmod +x mvnw
 
-RUN mvn clean package -DskipTests
+RUN ./mvnw dependency:go-offline -B
+
+RUN ./mvnw clean package -DskipTests
 
 EXPOSE 8080
 
-CMD ["sh", "-c", "java -jar target/*.jar"]
+CMD ["java", "-jar", "target/ministere-app-1.0.0.jar"]
