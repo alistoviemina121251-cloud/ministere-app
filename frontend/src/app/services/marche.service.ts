@@ -7,7 +7,7 @@ import { Marche, FiltreRecherche } from '../models/marche.model';
   providedIn: 'root'
 })
 export class MarcheService {
-  private apiUrl = 'http://localhost:8080/api/marches';
+  private apiUrl = 'https://ministere-app.onrender.com/api/marches';
 
   constructor(private http: HttpClient) { }
 
