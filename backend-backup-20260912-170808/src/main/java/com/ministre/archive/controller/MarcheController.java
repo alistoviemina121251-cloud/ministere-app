@@ -19,8 +19,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/marches")
 @CrossOrigin(
-    origins = "${FRONTEND_URL:http://localhost:4200}",
-    allowCredentials = "true"
+        origins = "${FRONTEND_URL:http://localhost:4200}",
+        allowCredentials = "true"
 )
 public class MarcheController {
 
@@ -42,7 +42,7 @@ public class MarcheController {
     getAllMarches() {
 
         return ResponseEntity.ok(
-            marcheService.getAllMarches()
+                marcheService.getAllMarches()
         );
     }
 
@@ -52,7 +52,7 @@ public class MarcheController {
             @PathVariable Long id) {
 
         return ResponseEntity.ok(
-            marcheService.getMarcheById(id)
+                marcheService.getMarcheById(id)
         );
     }
 
@@ -61,13 +61,14 @@ public class MarcheController {
     createMarche(
             @Valid @RequestBody Marche marche) {
 
+        Marche saved =
+                marcheService.createMarche(
+                        marche
+                );
+
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(
-                    marcheService.createMarche(
-                        marche
-                    )
-                );
+                .body(saved);
     }
 
     @PutMapping("/{id}")
@@ -77,10 +78,10 @@ public class MarcheController {
             @Valid @RequestBody Marche marche) {
 
         return ResponseEntity.ok(
-            marcheService.updateMarche(
-                id,
-                marche
-            )
+                marcheService.updateMarche(
+                        id,
+                        marche
+                )
         );
     }
 
@@ -106,33 +107,36 @@ public class MarcheController {
             @PathVariable Long marcheId) {
 
         return ResponseEntity.ok(
-            marcheService.getPiecesByMarche(
-                marcheId
-            )
+                marcheService.getPiecesByMarche(
+                        marcheId
+                )
         );
     }
 
     @PostMapping(
-        value = "/{marcheId}/pieces",
-        consumes = MediaType.MULTIPART_FORM_DATA_VALUE
+            value = "/{marcheId}/pieces",
+            consumes =
+                    MediaType.MULTIPART_FORM_DATA_VALUE
     )
     public ResponseEntity<PieceJointe>
     uploadPieceJointe(
             @PathVariable Long marcheId,
-            @RequestParam("file") MultipartFile file) {
+            @RequestParam("file")
+            MultipartFile file) {
+
+        PieceJointe piece =
+                marcheService.uploadPieceJointe(
+                        marcheId,
+                        file
+                );
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(
-                    marcheService.uploadPieceJointe(
-                        marcheId,
-                        file
-                    )
-                );
+                .body(piece);
     }
 
     @DeleteMapping(
-        "/{marcheId}/pieces/{pieceId}"
+            "/{marcheId}/pieces/{pieceId}"
     )
     public ResponseEntity<Void>
     deletePieceJointe(
@@ -140,8 +144,8 @@ public class MarcheController {
             @PathVariable Long pieceId) {
 
         marcheService.deletePieceJointe(
-            marcheId,
-            pieceId
+                marcheId,
+                pieceId
         );
 
         return ResponseEntity
@@ -150,7 +154,7 @@ public class MarcheController {
     }
 
     @GetMapping(
-        "/{marcheId}/pieces/{pieceId}"
+            "/{marcheId}/pieces/{pieceId}"
     )
     public ResponseEntity<byte[]>
     downloadPieceJointe(
@@ -158,19 +162,19 @@ public class MarcheController {
             @PathVariable Long pieceId) {
 
         byte[] file =
-            marcheService.downloadPieceJointe(
-                marcheId,
-                pieceId
-            );
+                marcheService.downloadPieceJointe(
+                        marcheId,
+                        pieceId
+                );
 
         return ResponseEntity.ok()
-            .header(
-                HttpHeaders.CONTENT_DISPOSITION,
-                "attachment"
-            )
-            .contentType(
-                MediaType.APPLICATION_OCTET_STREAM
-            )
-            .body(file);
+                .header(
+                        HttpHeaders.CONTENT_DISPOSITION,
+                        "attachment"
+                )
+                .contentType(
+                        MediaType.APPLICATION_OCTET_STREAM
+                )
+                .body(file);
     }
 }

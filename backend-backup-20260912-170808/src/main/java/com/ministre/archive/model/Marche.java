@@ -1,49 +1,64 @@
 package com.ministre.archive.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.NotBlank;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Table(
-    name = "marches",
-    indexes = {
-        @Index(
-            name = "idx_marche_reference",
-            columnList = "reference"
-        ),
-        @Index(
-            name = "idx_marche_date_creation",
-            columnList = "date_creation"
-        )
-    }
+        name = "marches",
+        indexes = {
+                @Index(
+                        name = "idx_marche_reference",
+                        columnList = "reference"
+                ),
+                @Index(
+                        name = "idx_marche_date_creation",
+                        columnList = "date_creation"
+                )
+        }
 )
 public class Marche {
 
     @Id
     @GeneratedValue(
-        strategy = GenerationType.IDENTITY
+            strategy = GenerationType.IDENTITY
     )
     private Long id;
 
+    @NotBlank(
+            message = "La référence est obligatoire."
+    )
     @Column(
-        nullable = false,
-        unique = true,
-        length = 100
+            nullable = false,
+            unique = true,
+            length = 100
     )
     private String reference;
 
+    @NotBlank(
+            message = "L'objet du marché est obligatoire."
+    )
     @Column(
-        nullable = false,
-        length = 500
+            nullable = false,
+            length = 500
     )
     private String objet;
 
     @Column(
-        columnDefinition = "TEXT"
+            columnDefinition = "TEXT"
     )
     private String description;
 
+    @DecimalMin(
+            value = "0.0",
+            inclusive = true,
+            message = "Le montant ne peut pas être négatif."
+    )
     private Double montant;
 
     private String duree;
@@ -77,12 +92,17 @@ public class Marche {
         LocalDateTime now =
                 LocalDateTime.now();
 
-        dateCreation = now;
-        dateModification = now;
+        if (dateCreation == null) {
+            dateCreation = now;
+        }
+
+        if (dateModification == null) {
+            dateModification = now;
+        }
 
         if (statut == null) {
             statut =
-                StatutArchive.EN_ATTENTE;
+                    StatutArchive.EN_ATTENTE;
         }
     }
 
@@ -106,7 +126,10 @@ public class Marche {
     }
 
     public void setReference(String reference) {
-        this.reference = reference;
+        this.reference =
+                reference == null
+                        ? null
+                        : reference.trim();
     }
 
     public String getObjet() {
@@ -114,7 +137,10 @@ public class Marche {
     }
 
     public void setObjet(String objet) {
-        this.objet = objet;
+        this.objet =
+                objet == null
+                        ? null
+                        : objet.trim();
     }
 
     public String getDescription() {

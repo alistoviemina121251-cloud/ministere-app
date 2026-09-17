@@ -1,28 +1,32 @@
 package com.ministre.archive.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Table(
-    name = "pieces_jointes",
-    indexes = {
-        @Index(
-            name = "idx_piece_marche",
-            columnList = "marche_id"
-        )
-    }
+        name = "pieces_jointes",
+        indexes = {
+                @Index(
+                        name = "idx_piece_marche",
+                        columnList = "marche_id"
+                )
+        }
 )
 public class PieceJointe {
 
     @Id
     @GeneratedValue(
-        strategy = GenerationType.IDENTITY
+            strategy = GenerationType.IDENTITY
     )
     private Long id;
 
-    @Column(nullable = false)
+    @Column(
+            nullable = false
+    )
     private String nom;
 
     private String type;
@@ -30,8 +34,8 @@ public class PieceJointe {
     private Long taille;
 
     @Column(
-        nullable = false,
-        columnDefinition = "TEXT"
+            nullable = false,
+            columnDefinition = "TEXT"
     )
     private String chemin;
 
@@ -40,9 +44,10 @@ public class PieceJointe {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(
-        name = "marche_id",
-        nullable = false
+            name = "marche_id",
+            nullable = false
     )
+    @JsonIgnore
     private Marche marche;
 
     @PrePersist
@@ -50,7 +55,7 @@ public class PieceJointe {
 
         if (dateUpload == null) {
             dateUpload =
-                LocalDateTime.now();
+                    LocalDateTime.now();
         }
     }
 

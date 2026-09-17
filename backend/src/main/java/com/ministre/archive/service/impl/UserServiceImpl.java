@@ -3,9 +3,11 @@ package com.ministre.archive.service.impl;
 import com.ministre.archive.model.User;
 import com.ministre.archive.repository.UserRepository;
 import com.ministre.archive.service.UserService;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.time.LocalDateTime;
 import java.util.NoSuchElementException;
 import java.util.Random;
@@ -14,152 +16,323 @@ import java.util.UUID;
 @Service
 @Transactional
 public class UserServiceImpl implements UserService {
+
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    
-    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
+
+    public UserServiceImpl(
+            UserRepository userRepository,
+            PasswordEncoder passwordEncoder) {
+
+        this.userRepository =
+                userRepository;
+
+        this.passwordEncoder =
+                passwordEncoder;
     }
-    
+
     @Override
     public User inscrire(User user) {
-        if (userRepository.existsByEmail(user.getEmail())) {
-            throw new RuntimeException("Cet email est d?j? utilis?");
+
+        if (user == null) {
+            throw new IllegalArgumentException(
+                "Données utilisateur invalides."
+            );
         }
-        if (userRepository.existsByNomUtilisateur(user.getNomUtilisateur())) {
-            throw new RuntimeException("Ce nom d'utilisateur est d?j? utilis?");
+
+        if (userRepository.existsByEmail(
+                user.getEmail())) {
+
+            throw new RuntimeException(
+                "Cet email est déjà utilisé."
+            );
         }
-        
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+
+        if (userRepository.existsByNomUtilisateur(
+                user.getNomUtilisateur())) {
+
+            throw new RuntimeException(
+                "Ce nom d'utilisateur est déjà utilisé."
+            );
+        }
+
+        user.setPassword(
+            passwordEncoder.encode(
+                user.getPassword()
+            )
+        );
+
         user.setActif(false);
-        user.setDateInscription(LocalDateTime.now());
+
+        user.setDateInscription(
+            LocalDateTime.now()
+        );
+
         user.setRole("USER");
-        
-        String code = String.format("%06d", new Random().nextInt(1000000));
+
+        String code =
+            String.format(
+                "%06d",
+                new Random().nextInt(1_000_000)
+            );
+
         user.setCodeConfirmation(code);
-        user.setCodeExpiration(LocalDateTime.now().plusMinutes(15));
-        
-        User savedUser = userRepository.save(user);
-        
-        System.out.println("=========================================");
-        System.out.println("?? INSCRIPTION - CODE DE CONFIRMATION");
-        System.out.println("?? Email: " + user.getEmail());
-        System.out.println("?? Code: " + code);
-        System.out.println("? Expiration: 15 minutes");
-        System.out.println("=========================================");
-        
+
+        user.setCodeExpiration(
+            LocalDateTime.now()
+                .plusMinutes(15)
+        );
+
+        User savedUser =
+                userRepository.save(user);
+
+        // Temporaire :
+        // à remplacer par l'envoi SMTP réel.
+        System.out.println(
+            "========================================="
+        );
+
+        System.out.println(
+            "CODE DE CONFIRMATION"
+        );
+
+        System.out.println(
+            "Email : " + user.getEmail()
+        );
+
+        System.out.println(
+            "Code : " + code
+        );
+
+        System.out.println(
+            "Expiration : 15 minutes"
+        );
+
+        System.out.println(
+            "========================================="
+        );
+
         return savedUser;
     }
-    
+
     @Override
+    @Transactional(readOnly = true)
     public User findByEmail(String email) {
-        return userRepository.findByEmail(email)
-            .orElseThrow(() -> new NoSuchElementException("Utilisateur non trouv?"));
+
+        if (email == null
+                || email.isBlank()) {
+
+            throw new IllegalArgumentException(
+                "Email obligatoire."
+            );
+        }
+
+        return userRepository
+            .findByEmail(email)
+            .orElseThrow(() ->
+                new NoSuchElementException(
+                    "Utilisateur non trouvé."
+                )
+            );
     }
-    
+
     @Override
-    public User activerCompte(String email, String code) {
-        User user = findByEmail(email);
-        
-        if (user.getActif()) {
-            throw new RuntimeException("Ce compte est d?j? activ?");
+    public User activerCompte(
+            String email,
+            String code) {
+
+        User user =
+                findByEmail(email);
+
+        if (Boolean.TRUE.equals(
+                user.getActif())) {
+
+            throw new RuntimeException(
+                "Ce compte est déjà activé."
+            );
         }
-        
-        if (!code.equals(user.getCodeConfirmation())) {
-            throw new RuntimeException("Code de confirmation incorrect");
+
+        if (code == null
+                || !code.equals(
+                    user.getCodeConfirmation())) {
+
+            throw new RuntimeException(
+                "Code de confirmation incorrect."
+            );
         }
-        
-        if (user.getCodeExpiration().isBefore(LocalDateTime.now())) {
-            throw new RuntimeException("Code de confirmation expir? (15 minutes)");
+
+        if (user.getCodeExpiration() == null
+                || user.getCodeExpiration()
+                    .isBefore(
+                        LocalDateTime.now()
+                    )) {
+
+            throw new RuntimeException(
+                "Code de confirmation expiré."
+            );
         }
-        
+
         user.setActif(true);
+
         user.setCodeConfirmation(null);
+
         user.setCodeExpiration(null);
-        
-        System.out.println("? Compte activ? pour: " + email);
+
         return userRepository.save(user);
     }
-    
+
     @Override
-    public void generateNewCode(String email) {
-        User user = findByEmail(email);
-        
-        if (user.getActif()) {
-            throw new RuntimeException("Ce compte est d?j? activ?");
+    public void generateNewCode(
+            String email) {
+
+        User user =
+                findByEmail(email);
+
+        if (Boolean.TRUE.equals(
+                user.getActif())) {
+
+            throw new RuntimeException(
+                "Ce compte est déjà activé."
+            );
         }
-        
-        String newCode = String.format("%06d", new Random().nextInt(1000000));
-        user.setCodeConfirmation(newCode);
-        user.setCodeExpiration(LocalDateTime.now().plusMinutes(15));
-        
+
+        String newCode =
+            String.format(
+                "%06d",
+                new Random().nextInt(1_000_000)
+            );
+
+        user.setCodeConfirmation(
+            newCode
+        );
+
+        user.setCodeExpiration(
+            LocalDateTime.now()
+                .plusMinutes(15)
+        );
+
         userRepository.save(user);
-        
-        System.out.println("=========================================");
-        System.out.println("?? NOUVEAU CODE DE CONFIRMATION");
-        System.out.println("?? Email: " + user.getEmail());
-        System.out.println("?? Nouveau code: " + newCode);
-        System.out.println("? Expiration: 15 minutes");
-        System.out.println("=========================================");
+
+        System.out.println(
+            "NOUVEAU CODE : "
+            + newCode
+        );
     }
-    
+
     @Override
-    public User findByNomUtilisateur(String nomUtilisateur) {
-        return userRepository.findByNomUtilisateur(nomUtilisateur)
-            .orElseThrow(() -> new NoSuchElementException("Utilisateur non trouv?"));
+    @Transactional(readOnly = true)
+    public User findByNomUtilisateur(
+            String nomUtilisateur) {
+
+        return userRepository
+            .findByNomUtilisateur(
+                nomUtilisateur
+            )
+            .orElseThrow(() ->
+                new NoSuchElementException(
+                    "Utilisateur non trouvé."
+                )
+            );
     }
-    
+
     @Override
-    public boolean existsByEmail(String email) {
-        return userRepository.existsByEmail(email);
+    @Transactional(readOnly = true)
+    public boolean existsByEmail(
+            String email) {
+
+        return userRepository
+            .existsByEmail(email);
     }
-    
+
     @Override
-    public boolean existsByNomUtilisateur(String nomUtilisateur) {
-        return userRepository.existsByNomUtilisateur(nomUtilisateur);
+    @Transactional(readOnly = true)
+    public boolean existsByNomUtilisateur(
+            String nomUtilisateur) {
+
+        return userRepository
+            .existsByNomUtilisateur(
+                nomUtilisateur
+            );
     }
-    
+
     @Override
-    public void updateLastLogin(String email) {
-        User user = findByEmail(email);
-        user.setDerniereConnexion(LocalDateTime.now());
+    public void updateLastLogin(
+            String email) {
+
+        User user =
+                findByEmail(email);
+
+        user.setDerniereConnexion(
+            LocalDateTime.now()
+        );
+
         userRepository.save(user);
     }
-    
+
     @Override
-    public void generateResetToken(String email) {
-        User user = findByEmail(email);
-        String token = UUID.randomUUID().toString();
+    public void generateResetToken(
+            String email) {
+
+        User user =
+                findByEmail(email);
+
+        String token =
+                UUID.randomUUID()
+                   .toString();
+
         user.setResetToken(token);
-        user.setResetTokenExpiry(LocalDateTime.now().plusMinutes(30));
+
+        user.setResetTokenExpiry(
+            LocalDateTime.now()
+                .plusMinutes(30)
+        );
+
         userRepository.save(user);
-        
-        System.out.println("=========================================");
-        System.out.println("?? R?INITIALISATION DU MOT DE PASSE");
-        System.out.println("?? Email: " + email);
-        System.out.println("?? Token: " + token);
-        System.out.println("? Expiration: 30 minutes");
-        System.out.println("=========================================");
+
+        System.out.println(
+            "TOKEN RESET : " + token
+        );
     }
-    
+
     @Override
-    public void resetPassword(String email, String token, String newPassword) {
-        User user = findByEmail(email);
-        
-        if (user.getResetToken() == null || !user.getResetToken().equals(token)) {
-            throw new RuntimeException("Token invalide");
+    public void resetPassword(
+            String email,
+            String token,
+            String newPassword) {
+
+        User user =
+                findByEmail(email);
+
+        if (user.getResetToken() == null
+                || !user.getResetToken()
+                    .equals(token)) {
+
+            throw new RuntimeException(
+                "Token invalide."
+            );
         }
-        
-        if (user.getResetTokenExpiry().isBefore(LocalDateTime.now())) {
-            throw new RuntimeException("Token expir?");
+
+        if (user.getResetTokenExpiry() == null
+                || user.getResetTokenExpiry()
+                    .isBefore(
+                        LocalDateTime.now()
+                    )) {
+
+            throw new RuntimeException(
+                "Token expiré."
+            );
         }
-        
-        user.setPassword(passwordEncoder.encode(newPassword));
+
+        user.setPassword(
+            passwordEncoder.encode(
+                newPassword
+            )
+        );
+
         user.setResetToken(null);
+
         user.setResetTokenExpiry(null);
+
         userRepository.save(user);
-        
-        System.out.println("? Mot de passe r?initialis? pour: " + email);
     }
 }
