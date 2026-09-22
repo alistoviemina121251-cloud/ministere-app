@@ -131,18 +131,14 @@ public class SecurityConfig {
                 new CorsConfiguration();
 
         /*
-         * Développement local + frontend Render.
-         *
-         * En production, FRONTEND_URL sera fourni
-         * par Render.
+         * Développement local + frontend Vercel.
          */
         configuration.setAllowedOriginPatterns(
             Arrays.asList(
-               "http://localhost:4200",
-        "http://127.0.0.1:4200",
-        "https://*.onrender.com",
-        "https://*.vercel.app",         // ✅ AJOUT
-        "https://ministere-app-*.vercel.app"  // ✅ AJOUT
+                "http://localhost:4200",
+                "http://127.0.0.1:4200",
+                "https://*.onrender.com",
+                "https://*.vercel.app"
             )
         );
 
