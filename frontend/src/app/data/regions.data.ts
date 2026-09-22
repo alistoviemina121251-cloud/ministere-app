@@ -1,4 +1,4 @@
-﻿import { Region, Departement, Commune } from '../models/marche.model';
+import { Region, Departement, Commune } from '../models/marche.model';
 
 export const REGIONS: Region[] = [
   {

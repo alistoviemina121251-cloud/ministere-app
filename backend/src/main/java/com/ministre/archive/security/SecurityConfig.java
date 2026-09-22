@@ -1,4 +1,4 @@
-﻿package com.ministre.archive.security;
+package com.ministre.archive.security;
 
 import java.util.Arrays;
 

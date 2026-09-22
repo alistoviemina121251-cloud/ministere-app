@@ -1,4 +1,4 @@
-﻿import { Component, EventEmitter, Output, OnInit } from '@angular/core';
+import { Component, EventEmitter, Output, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { StatutArchive, TypeMarche, FiltreRecherche } from '../../models/marche.model';
 import { REGIONS, COMMUNES } from '../../data/regions.data';

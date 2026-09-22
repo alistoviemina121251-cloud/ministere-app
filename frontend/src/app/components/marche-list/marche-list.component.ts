@@ -1,4 +1,4 @@
-﻿import { Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MarcheService } from '../../services/marche.service';
 import { Marche, FiltreRecherche } from '../../models/marche.model';

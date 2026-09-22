@@ -1,4 +1,4 @@
-﻿export enum StatutArchive {
+export enum StatutArchive {
   ACTIF = 'ACTIF',
   EN_COURS = 'EN_COURS',
   EN_ATTENTE = 'EN_ATTENTE',
