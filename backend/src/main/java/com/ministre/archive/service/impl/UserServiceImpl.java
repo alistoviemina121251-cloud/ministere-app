@@ -1,17 +1,18 @@
 package com.ministre.archive.service.impl;
 
-import com.ministre.archive.model.User;
-import com.ministre.archive.repository.UserRepository;
-import com.ministre.archive.service.UserService;
+import java.time.LocalDateTime;
+import java.util.NoSuchElementException;
+import java.util.Random;
+import java.util.UUID;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
-import java.util.NoSuchElementException;
-import java.util.Random;
-import java.util.UUID;
+import com.ministre.archive.model.User;
+import com.ministre.archive.repository.UserRepository;
+import com.ministre.archive.service.MailService;
+import com.ministre.archive.service.UserService;
 
 @Service
 @Transactional
@@ -19,16 +20,21 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final MailService mailService;
 
     public UserServiceImpl(
             UserRepository userRepository,
-            PasswordEncoder passwordEncoder) {
+            PasswordEncoder passwordEncoder,
+            MailService mailService) {
 
         this.userRepository =
                 userRepository;
 
         this.passwordEncoder =
                 passwordEncoder;
+
+        this.mailService =
+                mailService;
     }
 
     @Override
@@ -86,30 +92,9 @@ public class UserServiceImpl implements UserService {
         User savedUser =
                 userRepository.save(user);
 
-        // Temporaire :
-        // à remplacer par l'envoi SMTP réel.
-        System.out.println(
-            "========================================="
-        );
-
-        System.out.println(
-            "CODE DE CONFIRMATION"
-        );
-
-        System.out.println(
-            "Email : " + user.getEmail()
-        );
-
-        System.out.println(
-            "Code : " + code
-        );
-
-        System.out.println(
-            "Expiration : 15 minutes"
-        );
-
-        System.out.println(
-            "========================================="
+        mailService.envoyerCodeConfirmation(
+            user.getEmail(),
+            code
         );
 
         return savedUser;
@@ -213,9 +198,9 @@ public class UserServiceImpl implements UserService {
 
         userRepository.save(user);
 
-        System.out.println(
-            "NOUVEAU CODE : "
-            + newCode
+        mailService.envoyerCodeConfirmation(
+            user.getEmail(),
+            newCode
         );
     }
 
@@ -289,8 +274,9 @@ public class UserServiceImpl implements UserService {
 
         userRepository.save(user);
 
-        System.out.println(
-            "TOKEN RESET : " + token
+        mailService.envoyerTokenReinitialisation(
+            user.getEmail(),
+            token
         );
     }
 
