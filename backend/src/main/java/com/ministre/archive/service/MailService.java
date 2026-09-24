@@ -13,17 +13,20 @@ import org.springframework.web.client.RestTemplate;
 @Service
 public class MailService {
 
-    private static final String RESEND_API_URL =
-        "https://api.resend.com/emails";
+    private static final String SENDGRID_API_URL =
+        "https://api.sendgrid.com/v3/mail/send";
 
     private final RestTemplate restTemplate =
             new RestTemplate();
 
-    @Value("${RESEND_API_KEY}")
-    private String resendApiKey;
+    @Value("${SENDGRID_API_KEY}")
+    private String sendgridApiKey;
 
-    @Value("${RESEND_SENDER_EMAIL:onboarding@resend.dev}")
+    @Value("${SENDGRID_SENDER_EMAIL:alistoviemina121251@gmail.com}")
     private String senderEmail;
+
+    @Value("${SENDGRID_SENDER_NAME:Archive Ministere}")
+    private String senderName;
 
     public void envoyerCodeConfirmation(
             String email,
@@ -67,16 +70,48 @@ public class MailService {
         HttpHeaders headers =
                 new HttpHeaders();
 
-        headers.setBearerAuth(resendApiKey);
+        headers.setBearerAuth(sendgridApiKey);
         headers.setContentType(MediaType.APPLICATION_JSON);
+
+        Map<String, Object> to =
+                new HashMap<>();
+
+        to.put("email", destinataire);
+
+        Map<String, Object> personalization =
+                new HashMap<>();
+
+        personalization.put(
+            "to",
+            new Object[] { to }
+        );
+
+        Map<String, Object> from =
+                new HashMap<>();
+
+        from.put("email", senderEmail);
+        from.put("name", senderName);
+
+        Map<String, Object> content =
+                new HashMap<>();
+
+        content.put("type", "text/plain");
+        content.put("value", contenu);
 
         Map<String, Object> body =
                 new HashMap<>();
 
-        body.put("from", senderEmail);
-        body.put("to", new String[] { destinataire });
+        body.put(
+            "personalizations",
+            new Object[] { personalization }
+        );
+
+        body.put("from", from);
         body.put("subject", sujet);
-        body.put("text", contenu);
+        body.put(
+            "content",
+            new Object[] { content }
+        );
 
         HttpEntity<Map<String, Object>> request =
                 new HttpEntity<>(body, headers);
@@ -84,7 +119,7 @@ public class MailService {
         try {
 
             restTemplate.postForEntity(
-                RESEND_API_URL,
+                SENDGRID_API_URL,
                 request,
                 String.class
             );
