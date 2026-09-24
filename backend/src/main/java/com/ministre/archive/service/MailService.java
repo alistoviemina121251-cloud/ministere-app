@@ -13,20 +13,17 @@ import org.springframework.web.client.RestTemplate;
 @Service
 public class MailService {
 
-    private static final String BREVO_API_URL =
-        "https://api.brevo.com/v3/smtp/email";
+    private static final String RESEND_API_URL =
+        "https://api.resend.com/emails";
 
     private final RestTemplate restTemplate =
             new RestTemplate();
 
-    @Value("${BREVO_API_KEY}")
-    private String brevoApiKey;
+    @Value("${RESEND_API_KEY}")
+    private String resendApiKey;
 
-    @Value("${BREVO_SENDER_EMAIL}")
+    @Value("${RESEND_SENDER_EMAIL:onboarding@resend.dev}")
     private String senderEmail;
-
-    @Value("${BREVO_SENDER_NAME:Archive Ministere}")
-    private String senderName;
 
     public void envoyerCodeConfirmation(
             String email,
@@ -70,28 +67,16 @@ public class MailService {
         HttpHeaders headers =
                 new HttpHeaders();
 
-        headers.set("api-key", brevoApiKey);
+        headers.setBearerAuth(resendApiKey);
         headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.set("accept", "application/json");
-
-        Map<String, Object> sender =
-                new HashMap<>();
-
-        sender.put("email", senderEmail);
-        sender.put("name", senderName);
-
-        Map<String, Object> to =
-                new HashMap<>();
-
-        to.put("email", destinataire);
 
         Map<String, Object> body =
                 new HashMap<>();
 
-        body.put("sender", sender);
-        body.put("to", new Object[] { to });
+        body.put("from", senderEmail);
+        body.put("to", new String[] { destinataire });
         body.put("subject", sujet);
-        body.put("textContent", contenu);
+        body.put("text", contenu);
 
         HttpEntity<Map<String, Object>> request =
                 new HttpEntity<>(body, headers);
@@ -99,7 +84,7 @@ public class MailService {
         try {
 
             restTemplate.postForEntity(
-                BREVO_API_URL,
+                RESEND_API_URL,
                 request,
                 String.class
             );
