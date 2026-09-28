@@ -9,7 +9,7 @@ import { AuthService } from './services/auth.service';
       <header *ngIf="authService.isLoggedIn()" class="app-header">
         <div class="header-content">
           <div class="logo-section">
-            <h1>📁 Ministère App</h1>
+            <h1>📁 Ministère de l'urbanisme / l'habitat</h1>
           </div>
           <nav class="nav-links">
             <a routerLink="/dashboard" routerLinkActive="active">Dashboard</a>

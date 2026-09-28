@@ -25,7 +25,7 @@ public class MailService {
     @Value("${SENDGRID_SENDER_EMAIL:alistoviemina121251@gmail.com}")
     private String senderEmail;
 
-    @Value("${SENDGRID_SENDER_NAME:Archive Ministere}")
+    @Value("${SENDGRID_SENDER_NAME:Ministère de l'urbanisme / l'habitat}")
     private String senderName;
 
     public void envoyerCodeConfirmation(
@@ -40,7 +40,7 @@ public class MailService {
 
         envoyer(
             email,
-            "Confirmation de votre compte - Archive Ministère",
+            "Confirmation de votre compte - Ministère de l'urbanisme / l'habitat",
             texte
         );
     }
@@ -57,7 +57,7 @@ public class MailService {
 
         envoyer(
             email,
-            "Réinitialisation de mot de passe - Archive Ministère",
+            "Réinitialisation de mot de passe - Ministère de l'urbanisme / l'habitat",
             texte
         );
     }
